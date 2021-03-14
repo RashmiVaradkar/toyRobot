@@ -1,5 +1,7 @@
 {
   "name": "toyRobotProject",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

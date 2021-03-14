@@ -1,20 +1,50 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Toy Robot
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content padding>
+  <ion-grid >
+    <ion-row class="ion-justify-content-center" *ngFor="let row of rows;">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+      <ion-col size="2" [ngClass]="{'white-box':calcBoxColor(row, col),'black-box':!calcBoxColor(row, col)}"
+        *ngFor="let col of columns;">
+        <img src={{getImageOnIndex(row,col)}} >
+          
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>X </ion-col>
+      <ion-col>Y </ion-col>
+      <ion-col>Direction</ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><ion-input class= "black-box" type="number" name="xCoord" max-length="1" [(ngModel)]="xCoord"></ion-input></ion-col>
+      <ion-col><ion-input class= "black-box" type="number" name="yCoord" max-length="1" [(ngModel)]="yCoord"></ion-input></ion-col>
+      <ion-col><select class= "black-box" name="face" [(ngModel)]="face" >
+        <option  value={{dir.Code}} *ngFor="let dir of directions">{{dir.Title}}</option>
+      </select>
+      </ion-col>
+      <ion-col class="ion-align-items-center"><ion-button (click)="place()">Place Robot</ion-button></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-align-items-center"><ion-button (click)="left()">Left</ion-button></ion-col>
+      <ion-col class="ion-align-items-center"><ion-button (click)="move()">Move</ion-button></ion-col>
+      <ion-col class="ion-align-items-center"><ion-button (click)="right()">Right</ion-button></ion-col>
+      <ion-col class="ion-align-items-center"><ion-button (click)="report()">Report</ion-button></ion-col>
+    </ion-row>
+    <ion-row>
+      
+      <ion-col class="ion-align-items-center"><ion-input  class= "console" type="textArea" rows="4" col="50" readonly name="reportTxt" [innerHTML]="reportTxt"></ion-input></ion-col>
+    </ion-row>
+  </ion-grid>
+ 
 </ion-content>
