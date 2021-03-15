@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { Direction } from './direction';
 import { Location } from "./location";
-
 
 @Component({
   selector: 'app-home',
@@ -12,16 +11,13 @@ export class HomePage implements OnInit {
   tableTopObj : any;
   rows =  [4,3,2,1,0];
   columns =  [0,1,2,3,4];
-  robotImg : string = "";
+  reportMsg : string;
   @Input() xCoord: number;
   @Input() yCoord: number;
   @Input() face: string;
   @Input() reportTxt: string ='';
   public currentLocation: Location;
-  public directions = [{"Title":"North","Code":"N"},
-  {"Title":"East","Code":"E"},
-  {"Title":"West","Code":"W"},
-  {"Title":"South","Code":"S"}];
+  public directions = ['NORTH','EAST','SOUTH','WEST'];
   constructor() {}
 
   ngOnInit(){
@@ -29,28 +25,30 @@ export class HomePage implements OnInit {
     
   }
 
-  calcBoxColor(x, y) {
-    return ((x + y) % 2 === 0);
-  }
-
   getImageOnIndex(row,col) {
     //console.log("x:"+this.xCoord+" y:"+this.yCoord+" row:"+row+" col:"+col);
     if(!!this.currentLocation){
-      if (row == this.currentLocation.x && col==this.currentLocation.y) {
+      if (row == this.currentLocation.y && col==this.currentLocation.x) {
         switch (this.currentLocation.direction){
-        case 'N':
+        case Direction.North:
           return 'assets/north.png';
-        case 'E':
+        case Direction.East:
           return 'assets/east.png';
-        case 'S':
+        case Direction.South:
           return 'assets/south.png';  
-        case 'W':
+        case Direction.West:
           return 'assets/west.png';  
         }
       }
     }
-  return '';
+  return 'assets/blank.png';
     
+  }
+
+  reset(){
+    this.xCoord = undefined;
+    this.yCoord = undefined;
+    this.face = undefined;
   }
 
   place(): boolean{
@@ -58,10 +56,12 @@ export class HomePage implements OnInit {
     if(this.isPlaceValid(this.xCoord,this.yCoord,this.face)){
       this.currentLocation = new Location(this.xCoord,this.yCoord,this.face);
       this.reportTxt = this.reportTxt + "Robot is placed on table<br/>";
+      this.reset();
       return true;
     }
     else{
       this.reportTxt = this.reportTxt + "Place is invalid<br/>";
+      this.reset();
       return false;
     }  
     
@@ -71,14 +71,14 @@ export class HomePage implements OnInit {
     if(!!this.currentLocation){
       if (this.isValidMove(this.currentLocation)) {
         switch (this.currentLocation.direction){
-          case 'N':
-            return ++this.currentLocation.x;
-          case 'E':
+          case Direction.North:
             return ++this.currentLocation.y;
-          case 'S':
-            return --this.currentLocation.x;  
-          case 'W':
-            return --this.currentLocation.y;
+          case Direction.East:
+            return ++this.currentLocation.x;
+          case Direction.South:
+            return --this.currentLocation.y;  
+          case Direction.West:
+            return --this.currentLocation.x;
         }
       }  
     }
@@ -90,16 +90,16 @@ export class HomePage implements OnInit {
     if(!!this.currentLocation){
       this.reportTxt = this.reportTxt + "Robot rotated to left<br/>";
       switch (this.currentLocation.direction){
-        case 'N':
+        case Direction.North:
           this.currentLocation.direction = Direction.West;
           return this.currentLocation.direction;
-        case 'E':
+        case Direction.East:
           this.currentLocation.direction = Direction.North;
           return this.currentLocation.direction;
-        case 'S':
+        case Direction.South:
           this.currentLocation.direction = Direction.East;
           return this.currentLocation.direction;
-        case 'W':
+        case Direction.West:
           this.currentLocation.direction = Direction.South;
           return this.currentLocation.direction;  
       }
@@ -112,16 +112,16 @@ export class HomePage implements OnInit {
     if(!!this.currentLocation){
       this.reportTxt = this.reportTxt + "Robot rotated to right<br/>";
       switch (this.currentLocation.direction){
-        case 'N':
+        case Direction.North:
           this.currentLocation.direction = Direction.East;
           return this.currentLocation.direction;
-        case 'E':
+        case Direction.East:
           this.currentLocation.direction = Direction.South;
           return this.currentLocation.direction;
-        case 'S':
+        case Direction.South:
           this.currentLocation.direction = Direction.West;
           return this.currentLocation.direction;
-        case 'W':
+        case Direction.West:
           this.currentLocation.direction = Direction.North;
           return this.currentLocation.direction;  
       }
@@ -132,25 +132,28 @@ export class HomePage implements OnInit {
 
   report(){
     if(!!this.currentLocation)
-    this.reportTxt = this.reportTxt + "x:"+this.currentLocation.x+" y:"+this.currentLocation.y+" direction:"+this.currentLocation.direction+"<br/>";
+      this.reportMsg = this.currentLocation.x+","+this.currentLocation.y+","+this.currentLocation.direction;
     else
-      this.reportTxt = this.reportTxt + "Robot is not on table<br/>"; 
+      this.reportMsg = "Robot is not on table";
+
+    this.reportTxt = this.reportTxt + this.reportMsg+"<br/>"; 
+    alert(this.reportMsg);
   }
 
   isValidMove(currentLocation: Location): boolean {
     var newLocation = new Location(currentLocation.x, currentLocation.y, currentLocation.direction);
     switch (currentLocation.direction) {
         case Direction.North:
-            newLocation.x++;
-            break;
-        case Direction.East:
             newLocation.y++;
             break;
+        case Direction.East:
+            newLocation.x++;
+            break;
         case Direction.South:
-            newLocation.x--;
+            newLocation.y--;
             break;
         case Direction.West:
-            newLocation.y--;
+            newLocation.x--;
             break;
     }
 

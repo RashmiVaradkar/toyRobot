@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Toy Robot
+      Toy Robot Simulator
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -10,8 +10,7 @@
   <ion-grid >
     <ion-row class="ion-justify-content-center" *ngFor="let row of rows;">
 
-      <ion-col size="2" [ngClass]="{'white-box':calcBoxColor(row, col),'black-box':!calcBoxColor(row, col)}"
-        *ngFor="let col of columns;">
+      <ion-col size="2" class="box" *ngFor="let col of columns;">
         <img src={{getImageOnIndex(row,col)}} >
           
       </ion-col>
@@ -21,29 +20,25 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col>X </ion-col>
-      <ion-col>Y </ion-col>
-      <ion-col>Direction</ion-col>
-      <ion-col></ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col><ion-input class= "black-box" type="number" name="xCoord" max-length="1" [(ngModel)]="xCoord"></ion-input></ion-col>
-      <ion-col><ion-input class= "black-box" type="number" name="yCoord" max-length="1" [(ngModel)]="yCoord"></ion-input></ion-col>
-      <ion-col><select class= "black-box" name="face" [(ngModel)]="face" >
-        <option  value={{dir.Code}} *ngFor="let dir of directions">{{dir.Title}}</option>
-      </select>
+      <ion-col><ion-input class= "box" type="number" name="xCoord" placeholder="X" [(ngModel)]="xCoord" min="1"
+        step="1"  onkeypress="return event.charCode >= 48 && event.charCode <= 57"></ion-input></ion-col>
+      <ion-col><ion-input class= "box" type="number" name="yCoord" placeholder="Y" [(ngModel)]="yCoord" min="1"
+        step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" max="9"></ion-input></ion-col>
+      <ion-col><ion-select class= "box" name="face" [(ngModel)]="face" placeholder="Face">
+        <ion-select-option  value={{dir}} *ngFor="let dir of directions">{{dir}}</ion-select-option>
+      </ion-select>
       </ion-col>
-      <ion-col class="ion-align-items-center"><ion-button (click)="place()">Place Robot</ion-button></ion-col>
+      <ion-col ><ion-button (click)="place()">Place Robot</ion-button></ion-col>
     </ion-row>
     <ion-row>
-      <ion-col class="ion-align-items-center"><ion-button (click)="left()">Left</ion-button></ion-col>
-      <ion-col class="ion-align-items-center"><ion-button (click)="move()">Move</ion-button></ion-col>
-      <ion-col class="ion-align-items-center"><ion-button (click)="right()">Right</ion-button></ion-col>
-      <ion-col class="ion-align-items-center"><ion-button (click)="report()">Report</ion-button></ion-col>
+      <ion-col size="2"><ion-button (click)="left()"><ion-icon name="arrow-back-outline"></ion-icon></ion-button></ion-col>
+      <ion-col size="3"><ion-button (click)="move()">Move</ion-button></ion-col>
+      <ion-col size="2"><ion-button (click)="right()"><ion-icon name="arrow-forward-outline"></ion-icon></ion-button></ion-col>
+      <ion-col size="3"><ion-button (click)="report()">Report</ion-button></ion-col>
     </ion-row>
     <ion-row>
       
-      <ion-col class="ion-align-items-center"><ion-input  class= "console" type="textArea" rows="4" col="50" readonly name="reportTxt" [innerHTML]="reportTxt"></ion-input></ion-col>
+      <ion-col class="ion-align-items-center"><label>Logs:</label><ion-input  class= "console" type="textArea" rows="4" col="50" readonly name="reportTxt" [innerHTML]="reportTxt"></ion-input></ion-col>
     </ion-row>
   </ion-grid>
  
